@@ -1,0 +1,1 @@
+Cabe destacar que o DER foi intencionalmente simplificado com o objetivo de facilitar a compreensão. Nele, buscou-se representar apenas as relações e a estrutura básica do projeto. Os tipos de dados e todas as tabelas completas estarão devidamente documentados no MR e no DD.
