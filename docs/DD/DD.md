@@ -31,15 +31,15 @@
 | Alinhamento_Atual  | SMALLINT          |    | Faccao(ID_Faccao) | ❌     | Referência ao alinhamento/facção atual .              |
 | Fome_Atual         | SMALLINT          |    |    | ❌     | Nível atual de fome.                                                     |
 | Sede_Atual         | SMALLINT          |    |    | ❌     | Nível atual de sede.                                                     |
-| Mut_Cab            | SMALLINT          |    | Mutacao(ID_Mutacao) | ❌     | FK para mutação aplicada à cabeça.                                       |
-| Mut_Tronco         | SMALLINT          |    | Mutacao(ID_Mutacao) | ❌     | FK para mutação aplicada ao tronco.                                      |
-| Mut_Braco          | SMALLINT          |    | Mutacao(ID_Mutacao) | ❌     | FK para mutação aplicada ao braço.                                       |
-| Mut_Perna          | SMALLINT          |    | Mutacao(ID_Mutacao) | ❌     | FK para mutação aplicada à perna.                                        |
-| Eq_Cab             | SMALLINT          |    | Inst_Item(ID_Inst) | ❌     | FK para equipamento usado na cabeça.                                     |
-| Eq_Tronco          | SMALLINT          |    | Inst_Item(ID_Inst) | ❌     | FK para equipamento usado no tronco.                                     |
-| Eq_Braco           | SMALLINT          |    | Inst_Item(ID_Inst) | ❌     | FK para equipamento usado no braço.                                      |
-| Eq_Perna           | SMALLINT          |    | Inst_Item(ID_Inst) | ❌     | FK para equipamento usado na perna.                                      |
-| Arma_Atual         | SMALLINT          |    | Inst_Item(ID_Inst) | ❌     | FK para arma atualmente equipada.                                        |
+| Mut_Cab            | SMALLINT          |    | Mutacao(ID_Mutacao) | ✔️     | FK para mutação aplicada à cabeça.                                       |
+| Mut_Tronco         | SMALLINT          |    | Mutacao(ID_Mutacao) | ✔️     | FK para mutação aplicada ao tronco.                                      |
+| Mut_Braco          | SMALLINT          |    | Mutacao(ID_Mutacao) | ✔️     | FK para mutação aplicada ao braço.                                       |
+| Mut_Perna          | SMALLINT          |    | Mutacao(ID_Mutacao) | ✔️     | FK para mutação aplicada à perna.                                        |
+| Eq_Cab             | SMALLINT          |    | Inst_Item(ID_Inst) | ✔️     | FK para equipamento usado na cabeça.                                     |
+| Eq_Tronco          | SMALLINT          |    | Inst_Item(ID_Inst) | ✔️     | FK para equipamento usado no tronco.                                     |
+| Eq_Braco           | SMALLINT          |    | Inst_Item(ID_Inst) | ✔️     | FK para equipamento usado no braço.                                      |
+| Eq_Perna           | SMALLINT          |    | Inst_Item(ID_Inst) | ✔️     | FK para equipamento usado na perna.                                      |
+| Arma_Atual         | SMALLINT          |    | Inst_Item(ID_Inst) | ✔️     | FK para arma atualmente equipada.                                        |
 | Save               | SMALLINT          |    |  | ❌     | Save ao qual essa instância está associada.                  |
 | Localizacao        | SMALLINT          |    | Ponto_Interesse(ID_PI) | ❌     | FK para a localização atual do personagem.                               |
 
