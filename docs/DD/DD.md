@@ -123,7 +123,7 @@
 | Coluna   | Tipo de dado | PK | FK | Nulo? | Descrição                                                       |
 |----------|--------------|----|----|--------|-----------------------------------------------------------------|
 | ID_NPC   | SMALLINT          | ✔️ | Ser(ID_Ser) | ❌     | FK para o NPC que pode dropar o item.                          |
-| ID_Iten  | SMALLINT          | ✔️ | Inst_Iten(ID_Inst) | ❌     | FK para o item que pode ser dropado por esse NPC.              |
+| ID_Item  | SMALLINT          | ✔️ | Inst_Item(ID_Inst) | ❌     | FK para o item que pode ser dropado por esse NPC.              |
 
 ---
 
