@@ -1,0 +1,6 @@
+prompt_toolkit
+rich
+inquirer
+python-dotenv
+psycopg[binary]
+networkx
