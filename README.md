@@ -1,7 +1,7 @@
 
 # ☢️ Terra Abrasada 
 
-![](docs\Capa.png)
+![](./docs/Capa.png)
 
 
 Uma experiência narrativa e estratégica ambientada em um mundo devastado por um desastre nuclear. Você é um sobrevivente em busca de recursos, abrigo e respostas. Gerencie seus recursos, tome decisões críticas e interaja com um mundo hostil.
