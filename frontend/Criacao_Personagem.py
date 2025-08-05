@@ -50,11 +50,11 @@ def escolher_save(conn):
         confirm = inquirer.prompt([
             inquirer.List("confirma", 
                            message=f"O slot {slot_escolhido} está ocupado por {saves[slot_escolhido]}. Deseja sobrescrever?",
-                           choices=["Sim", "Não" , "Voltar"])
+                           choices=["Não", "Sim" , "Voltar"])
         ])
         if confirm["confirma"] == "Não":
-            console.print("[yellow]Por hora finge que tá o resto do jogo aqui[/yellow]")
-            exit(0)
+            console.print(f"[green]Carregando save existente: {saves[slot_escolhido]}[/green]")
+            return slot_escolhido
         
         elif confirm["confirma"] == "Voltar":
             return escolher_save(conn)
@@ -99,7 +99,6 @@ def criar_instancia(conn, id_pro, nome_instancia, save):
             console.print("[red]Erro ao recuperar dados da classe.[/red]")
             exit(1)
 
-        # Desempacotar dados da classe de forma mais clara
         _, nome_classe, hp_base, forca, defesa, niv_rad, alinhamento, fome, sede = prota
 
         # Inserir nova instância

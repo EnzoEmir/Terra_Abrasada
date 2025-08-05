@@ -195,8 +195,11 @@ CREATE TABLE Bau_Base (
 );
 
 CREATE TABLE Evento (
-    ID_Evento SMALLINT PRIMARY KEY,
-    Max_Ocorrencia SMALLINT NOT NULL
+    ID_Evento SERIAL PRIMARY KEY,
+    Max_Ocorrencia SMALLINT NOT NULL,
+    Prioridade CHAR(1) NOT NULL,
+    Probabilidade VARCHAR(3) NOT NULL,
+    Tipo VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE Ocorre (
@@ -234,9 +237,8 @@ CREATE TABLE Status_Missao (
 
 CREATE TABLE Acontecimento (
     ID_Evento SMALLINT PRIMARY KEY,
-    Atributo  SMALLINT NOT NULL,
     Valor SMALLINT NOT NULL,
-    Texto SMALLINT NOT NULL,
+    Texto VARCHAR,
     FOREIGN KEY (ID_Evento) REFERENCES Evento(ID_Evento)
 );
 
