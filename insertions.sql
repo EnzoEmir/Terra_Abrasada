@@ -45,15 +45,50 @@ INSERT INTO Ponto_Interesse (ID_PI, Nome, Niv_Rad) VALUES
 INSERT INTO Ser (ID_Ser, Tipo) VALUES
 (1, 'Prota'),
 (2, 'Prota'),
-(3, 'Prota');
+(3, 'Prota'),
+
+-- Inimigos Não Inteligentes Fáceis
+(101, 'N'), (102, 'N'), (103, 'N'), (104, 'N'), (105, 'N'), (106, 'N'),
+
+-- Inimigos Não Inteligentes Médios
+(201, 'N'), (202, 'N'), (203, 'N'),
+
+-- Inimigos Não Inteligentes Difíceis
+(301, 'N'), (302, 'N'), (303, 'N'),
+
+-- Hidra de Carne (Lagartos Mutados)
+(501, 'N'), (502, 'N'), (503, 'N'),
+
+-- Omni-Mente (Formigas Mutadas)
+(601, 'N'), (602, 'N'), (603, 'N'),
+
+-- Bosses Não Inteligentes
+(997, 'N'), (998, 'N'),
+
+-- Inimigos Inteligentes Fáceis
+(107, 'I'), (108, 'I'),
+
+-- Inimigos Inteligentes Médios
+(204, 'I'), (205, 'I'),
+
+-- Inimigos Inteligentes Difíceis
+(304, 'I'), (305, 'I'),
+
+-- Nigrum Sanguinem (hierarquia)
+(401, 'I'), (402, 'I'), (403, 'I'), (404, 'I'),
+
+-- Boss Inteligente
+(999, 'I');
 
 -- =======================================
--- 3. FACÇÕES
+-- 1A. FACCOES (necessário para alinhamento de inteligentes)
 -- =======================================
 INSERT INTO Faccao (ID_Faccao, Nome) VALUES
-(0, 'Neutro'),
-(1, 'Pisa-Poeira'),
-(2, 'Tecnocratas');
+(0, 'Nada'),
+(1, 'Neutro'),
+(2, 'Nigrum Sanguinem'),
+(3, 'Hostil'),
+(4, 'Pisa-Poeira');
 
 -- =======================================
 -- 4. PROTAS
@@ -154,3 +189,240 @@ SELECT criar_acontecimento_mundo( 8::SMALLINT, 'Encontrou um refúgio seguro, re
 SELECT criar_acontecimento_mundo( -7::SMALLINT, 'Foi roubado durante a noite, perdeu 7 de fome.', 2::SMALLINT, 1::SMALLINT, '1', '8');
 SELECT criar_acontecimento_mundo( 4::SMALLINT, 'Achou um galão de água, recuperou 4 de sede.', 2::SMALLINT, 1::SMALLINT, '1', '1');
 SELECT criar_acontecimento_mundo( 10::SMALLINT, 'Banquete inesperado! Recuperou 10 de fome.', 2::SMALLINT, 1::SMALLINT, '1', '1');
+
+
+-- =======================================
+-- 9. INIMIGOS NÃO INTELIGENTES
+-- =======================================
+INSERT INTO Nao_Inteligente (ID_N_Int, Nome, HP_Base, Forca_Base, Defesa_Base, Nivel_Rad) VALUES
+
+-- Inimigos Fáceis
+(101, 'Barata Mutante',      20,  4, 0,  0),
+(102, 'Cachorro Faminto',    40,  7, 1,  0),
+(103, 'Rato Carniceiro',     25,  6, 0,  0),
+(104, 'Corvo Mutante',       30,  5, 1,  0),
+(105, 'Pombo Radioativo',    22,  3, 1,  2),
+(106, 'Cururu Mutante',      20,  4, 0,  0),
+
+
+-- Inimigos Médios
+(201, 'Cachorro Mutante',    75, 12, 3,  5),
+(202, 'Robô de Segurança',  110, 15, 6,  0),
+(203, 'Jacaré Mutante',      90, 16, 4,  7),
+
+
+-- Inimigos Difíceis
+(301, 'Brutamontes Mutante',180, 20,10, 20),
+(302, 'Ecohorror',          140, 18, 4, 15),
+(303, 'Urubu de Aço',       130, 14, 3, 10),
+
+
+-- Hidra de Carne (Lagartos Mutados)
+(501, 'Lagarto Mutante',     60, 12, 2,  5),
+(502, 'Lagarto Putrefato',   90, 16, 4, 10),
+(503, 'Lagarto Espinhoso',   75, 14, 3,  8),
+
+
+-- Omni-Mente (Formigas Mutadas)
+(601, 'Formiga Operária',    25,  6, 0,  3),
+(602, 'Formiga Soldado',     55, 12, 2,  7),
+(603, 'Formiga Anciã',       90, 15, 4, 12),
+
+
+-- BOSSES Não Inteligente
+(998, 'Hidra de Carne',     320, 28, 9, 25),
+(997, 'Omni-mente',         280, 22, 6, 30);
+
+
+
+-- =======================================
+-- 10. INIMIGOS INTELIGENTES
+-- =======================================
+
+INSERT INTO Inteligente (ID_Int, Nome, HP_Base, Forca_Base, Defesa_Base, Nivel_Rad, Alinhamento) VALUES
+
+-- Inimigos Inteligentes Fáceis
+(107, 'Catador', 55, 7, 1, 0, 4),
+(108, 'Fanático Desconhecido', 50, 6, 2, 1, 2),
+
+-- Inimigos Médios
+(204, 'Sobrevivente Hostil', 90, 11, 2, 1, 3),
+(205, 'Canibal', 85, 13, 4, 2, 3),
+
+-- Inimigos Difíceis
+(304, 'Pessoa Mutante', 130, 16, 6, 5, 3),
+(305, 'Ex-Militar Enlouquecido', 160, 18, 6, 4, 3),
+
+
+-- Nigrum Sanguinem: Hierarquia com nomes próprios
+(401, 'Discípulo da Luz Verde', 60, 9, 1, 1, 2),
+(402, 'Portador da Chama', 75, 12, 2, 2, 2),
+(403, 'Sacerdote da Mutação', 95, 14, 3, 2, 2),
+(404, 'Profeta Isótopo', 140, 17, 4, 3, 2),
+
+
+-- BOSSES Inteligentes
+(999, 'Avatar do Núcleo', 300, 25, 10, 8, 2);
+
+
+
+-- =======================================
+-- 11. ENCONTROS COM INIMIGOS 
+-- =======================================
+
+SELECT criar_encontro(103, 1, 2, NULL::INT, '1', '50');
+-- ENCONTROS INICIAIS FÁCEIS (PI 2, 3, 4, 5)
+
+-- ENCONTROS INICIAIS FÁCEIS (PI 2, 3, 4, 5)
+
+-- PI 2: Travessia da Poeira
+SELECT criar_encontro(101, 2, 2, NULL::INT, '1', '30');  -- 2 Baratas Mutantes
+SELECT criar_encontro(107, 1, 2, NULL::INT, '1', '60');  -- 1 Catador
+
+-- PI 3: Posto de Vigia Abandonado
+SELECT criar_encontro(103, 2, 3, NULL::INT, '1', '35');  -- 2 Ratos Carniceiros
+
+-- PI 4: Cidade Fantasma
+SELECT criar_encontro(105, 3, 4, NULL::INT, '1', '25');  -- 3 Pombos Radioativos
+SELECT criar_encontro(107, 1, 4, NULL::INT, '1', '60');  -- 1 Catador
+
+-- PI 5: Terra Chamuscada
+SELECT criar_encontro(106, 2, 5, NULL::INT, '1', '30');  -- 2 Cururus Mutantes
+
+-- PI 6: Subúrbio dos Esquecidos
+SELECT criar_encontro(103, 2, 6, NULL::INT, '1', '30'); -- 2 Ratos Carniceiros
+SELECT criar_encontro(107, 1, 6, NULL::INT, '1', '25'); -- 1 Catador
+SELECT criar_encontro(102, 1, 6, NULL::INT, '1', '15'); -- 1 Cachorro Faminto
+
+-- PI 7: Base dos Pisa Poeira
+SELECT criar_encontro(107, 1, 7, NULL::INT, '1', '20'); -- 1 Catador
+
+-- PI 8: Escola Amanhecer Dourado
+SELECT criar_encontro(103, 2, 8, NULL::INT, '1', '25'); -- 2 Ratos Carniceiros
+SELECT criar_encontro(107, 1, 8, NULL::INT, '1', '20'); -- 1 Catador
+
+-- PI 9: Cemitério das Máquinas
+SELECT criar_encontro(202, 1, 9, NULL::INT, '2', '20'); -- 1 Robô de Segurança
+SELECT criar_encontro(303, 1, 9, NULL::INT, '3', '10'); -- 1 Urubu de Aço
+SELECT criar_encontro(107, 1, 9, NULL::INT, '1', '10'); -- 1 Catador
+
+-- PI 10: Colinas Negras
+SELECT criar_encontro(104, 2, 10, NULL::INT, '1', '25'); -- 2 Corvos Mutantes
+SELECT criar_encontro(105, 2, 10, NULL::INT, '2', '15'); -- 2 Pombos Radioativos
+SELECT criar_encontro(301, 1, 10, NULL::INT, '3', '10'); -- 1 Brutamontes Mutante
+
+-- PI 11: Mercabunker
+SELECT criar_encontro(107, 1, 11, NULL::INT, '1', '20'); -- 1 Catador
+
+-- PI 12: Poço de água
+SELECT criar_encontro(106, 2, 12, NULL::INT, '1', '25'); -- 2 Cururus Mutantes
+SELECT criar_encontro(103, 2, 12, NULL::INT, '1', '15'); -- 2 Ratos Carniceiros
+
+-- PI 13: Hospital Subterrâneo
+SELECT criar_encontro(301, 1, 13, NULL::INT, '3', '20'); -- 1 Brutamontes Mutante
+SELECT criar_encontro(302, 1, 13, NULL::INT, '4', '10'); -- 1 Ecohorror
+SELECT criar_encontro(304, 1, 13, NULL::INT, '4', '10'); -- 1 Pessoa Mutante
+
+-- PI 14: Aeroporto Militar
+SELECT criar_encontro(302, 1, 14, NULL::INT, '3', '20'); -- 1 Ecohorror
+SELECT criar_encontro(305, 1, 14, NULL::INT, '4', '10'); -- 1 Ex-Militar Enlouquecido
+SELECT criar_encontro(304, 1, 14, NULL::INT, '4', '10'); -- 1 Pessoa Mutante
+
+-- PI 15: Pátio do Ferro-Velho
+SELECT criar_encontro(202, 1, 15, NULL::INT, '2', '20'); -- 1 Robô de Segurança
+SELECT criar_encontro(303, 1, 15, NULL::INT, '3', '10'); -- 1 Urubu de Aço
+SELECT criar_encontro(107, 1, 15, NULL::INT, '1', '10'); -- 1 Catador
+
+-- PI 16: Lugar Algum
+SELECT criar_encontro(103, 1, 16, NULL::INT, '1', '10'); -- 1 Rato Carniceiro
+
+-- PI 17: Mêtro do Surfista
+SELECT criar_encontro(103, 2, 17, NULL::INT, '1', '20'); -- 2 Ratos Carniceiros
+SELECT criar_encontro(105, 2, 17, NULL::INT, '1', '10'); -- 2 Pombos Radioativos
+
+-- PI 18: Estação de Tratamento de Água
+SELECT criar_encontro(106, 2, 18, NULL::INT, '1', '20'); -- 2 Cururus Mutantes
+SELECT criar_encontro(203, 1, 18, NULL::INT, '2', '10'); -- 1 Jacaré Mutante
+
+-- =======================================
+-- ENCONTROS TEMÁTICOS COM LAGARTOS MUTADOS DA HIDRA DE CARNE
+-- =======================================
+
+-- PI 23: Brejo Mórbido (encontros fáceis)
+SELECT criar_encontro(501, 1, 23, NULL::INT, '1', '30'); -- 1 Lagarto Mutante
+SELECT criar_encontro(501, 2, 23, NULL::INT, '1', '25'); -- 2 Lagartos Mutantes
+SELECT criar_encontro(502, 1, 23, NULL::INT, '2', '10'); -- 1 Lagarto Putrefato
+SELECT criar_encontro(501, 2, 23, NULL::INT, '2', '10'); -- 2 Lagartos Mutantes
+SELECT criar_encontro(501, 1, 23, NULL::INT, '2', '10'); -- 1 Lagarto Mutante
+
+-- PI 24: Trilho Encharcado (encontros intermediários)
+SELECT criar_encontro(501, 2, 24, NULL::INT, '2', '25'); -- 2 Lagartos Mutantes
+SELECT criar_encontro(502, 1, 24, NULL::INT, '2', '25'); -- 1 Lagarto Putrefato
+SELECT criar_encontro(503, 1, 24, NULL::INT, '3', '20'); -- 1 Lagarto Espinhoso
+SELECT criar_encontro(502, 2, 24, NULL::INT, '3', '15'); -- 2 Lagartos Putrefatos
+SELECT criar_encontro(503, 2, 24, NULL::INT, '3', '10'); -- 2 Lagartos Espinhosos
+SELECT criar_encontro(502, 1, 24, NULL::INT, '3', '10'); -- 1 Lagarto Putrefato
+SELECT criar_encontro(503, 1, 24, NULL::INT, '3', '10'); -- 1 Lagarto Espinhoso
+
+-- Encontro com a Hidra de Carne
+
+-- PI 25: Covil da Hidra de Carne (boss)
+SELECT criar_encontro(998, 1, 25, 1, '5', '100'); -- 1 Hidra de Carne (boss)
+
+-- =======================================
+-- ENCONTROS TEMÁTICOS COM FORMIGAS MUTADAS DA OMNI-MENTE
+-- =======================================
+
+-- PI 26: Túnel de Rastro Químico (encontros fáceis)
+SELECT criar_encontro(601, 2, 26, NULL::INT, '1', '30'); -- 2 Formigas Operárias
+SELECT criar_encontro(601, 3, 26, NULL::INT, '1', '20'); -- 3 Formigas Operárias
+SELECT criar_encontro(601, 1, 26, NULL::INT, '2', '15'); -- 1 Formiga Operária
+
+-- PI 27: Ninho de Operárias (encontros intermediários)
+SELECT criar_encontro(601, 2, 27, NULL::INT, '2', '25'); -- 2 Formigas Operárias
+SELECT criar_encontro(602, 1, 27, NULL::INT, '2', '25'); -- 1 Formiga Soldado
+SELECT criar_encontro(601, 1, 27, NULL::INT, '2', '20'); -- 1 Formiga Operária
+SELECT criar_encontro(602, 2, 27, NULL::INT, '3', '15'); -- 2 Formigas Soldado
+SELECT criar_encontro(601, 1, 27, NULL::INT, '3', '10'); -- 1 Formiga Operária
+SELECT criar_encontro(602, 1, 27, NULL::INT, '3', '10'); -- 1 Formiga Soldado
+
+-- PI 28: Centro de Comando Feromon (encontros difíceis)
+SELECT criar_encontro(602, 2, 28, NULL::INT, '3', '20'); -- 2 Formigas Soldado
+SELECT criar_encontro(603, 1, 28, NULL::INT, '3', '20'); -- 1 Formiga Anciã
+SELECT criar_encontro(602, 1, 28, NULL::INT, '4', '15'); -- 1 Formiga Soldado
+SELECT criar_encontro(603, 2, 28, NULL::INT, '4', '10'); -- 2 Formigas Anciã
+SELECT criar_encontro(602, 1, 28, NULL::INT, '4', '10'); -- 1 Formiga Soldado
+SELECT criar_encontro(603, 1, 28, NULL::INT, '4', '10'); -- 1 Formiga Anciã
+
+-- PI 29: Trono da Omni-Mente (boss)
+SELECT criar_encontro(997, 1, 29, 1, '5', '100'); -- 1 Omni-Mente (boss)
+
+-- =======================================
+-- ENCONTROS TEMÁTICOS COM O CULTO
+-- =======================================
+
+-- PI 19: Portão Esquecido (encontros fáceis)
+SELECT criar_encontro(401, 1, 19, NULL::INT, '1', '30'); -- 1 Discípulo da Luz Verde
+SELECT criar_encontro(401, 2, 19, NULL::INT, '1', '25'); -- 2 Discípulos da Luz Verde
+SELECT criar_encontro(402, 1, 19, NULL::INT, '2', '15'); -- 1 Portador da Chama
+SELECT criar_encontro(401, 2, 19, NULL::INT, '2', '10'); -- 2 Discípulos da Luz Verde
+SELECT criar_encontro(402, 1, 19, NULL::INT, '2', '10'); -- 1 Portador da Chama
+
+-- PI 20: Vales da Praga (encontros intermediários)
+SELECT criar_encontro(402, 2, 20, NULL::INT, '2', '25'); -- 2 Portadores da Chama
+SELECT criar_encontro(403, 1, 20, NULL::INT, '2', '25'); -- 1 Sacerdote da Mutação
+SELECT criar_encontro(402, 1, 20, NULL::INT, '3', '20'); -- 1 Portador da Chama
+SELECT criar_encontro(403, 1, 20, NULL::INT, '3', '15'); -- 1 Sacerdote da Mutação
+SELECT criar_encontro(402, 2, 20, NULL::INT, '3', '10'); -- 2 Portadores da Chama
+SELECT criar_encontro(403, 1, 20, NULL::INT, '3', '10'); -- 1 Sacerdote da Mutação
+
+-- PI 21: Santuário da Desfiguração (encontros difíceis)
+SELECT criar_encontro(403, 2, 21, NULL::INT, '3', '25'); -- 2 Sacerdotes da Mutação
+SELECT criar_encontro(404, 1, 21, NULL::INT, '3', '25'); -- 1 Profeta Isótopo
+SELECT criar_encontro(403, 1, 21, NULL::INT, '4', '20'); -- 1 Sacerdote da Mutação
+SELECT criar_encontro(404, 1, 21, NULL::INT, '4', '15'); -- 1 Profeta Isótopo
+SELECT criar_encontro(403, 2, 21, NULL::INT, '4', '10'); -- 2 Sacerdotes da Mutação
+SELECT criar_encontro(404, 1, 21, NULL::INT, '4', '10'); -- 1 Profeta Isótopo
+
+-- PI 22: Coração de Sanguinem (boss)
+SELECT criar_encontro(999, 1, 22, 1, '5', '100'); -- 1 Avatar do Núcleo (boss)

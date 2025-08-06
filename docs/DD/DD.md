@@ -257,7 +257,7 @@
 | Coluna         | Tipo de dado | PK | FK | Nulo? | Descrição                                                        |
 |----------------|--------------|----|----|--------|------------------------------------------------------------------|
 | ID_Evento      | SMALLINT          | ✔️ |    | ❌     | Identificador único do evento.                                  |
-| Max_Ocorrencia | SMALLINT          |    |    | ❌     | Número máximo de vezes que o evento pode ocorrer.               |
+| Max_Ocorrencia | SMALLINT          |    |    | ✔️     | Número máximo de vezes que o evento pode ocorrer.               |
 | Prioridade | CHAR(1)          |    |    | ❌     | Prioridade que o evento tem para ocorrer.               |
 | Probabilidade | VARCHAR(3)          |    |    | ❌     | Probabilidade que o evento tem para ocorrer.               |
 | Tipo | VARCHAR(10)          |    |    | ❌     | Tipo do evento('MISSAO', 'ENCONTRO', 'ACONTECIMENTO MUNDO').               |

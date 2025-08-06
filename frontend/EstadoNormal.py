@@ -5,11 +5,8 @@ import psycopg
 from frontend.Andar import andar
 from frontend.Explorar import explorar
 from frontend.Bau import listar_bau_base
-from rich.console import Console
 
 
-
-console = Console()
 
 
 class EstadoNormal:
@@ -119,6 +116,13 @@ class EstadoNormal:
             row = cur.fetchone()
             return row[0] if row else 0
 
+    def get_def(self):
+        with self.get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT Defesa_Atual FROM Inst_Prota WHERE Save = %s", (self.save,))
+            row = cur.fetchone()
+            return row[0] if row else 0
+
     def get_nome(self):
         with self.get_conn() as conn:
             cur = conn.cursor()
@@ -135,7 +139,7 @@ class EstadoNormal:
             sede_atual, sede_max = self.get_sede()
             nivel_rad_atual = self.get_radiacao()
             nome_prota = self.get_nome()
-            console.print(f'[green]{nome_prota} se encontra no(a) {nome}.[/green]')
+            print(f'{nome_prota} se encontra no(a) {nome}.')
             print(f'Vida: {hp_atual}/{hp_max}')
             print(f'Fome: {fome_atual}/{fome_max}')
             print(f'Sede: {sede_atual}/{sede_max}')
@@ -162,6 +166,13 @@ class EstadoNormal:
                 break
             else:
                 resultado_acao = self.opcoes[acao]()
+                
+                # Verifica se o protagonista morreu
+                if resultado_acao == "derrota_protagonista":
+                    print("\n=== GAME OVER ===")
+                    print("Seu protagonista morreu e o save foi deletado.")
+                    input("\nPressione Enter para retornar ao menu principal...")
+                    break
     
     def andar(self):
         lol = andar(self)
@@ -172,7 +183,7 @@ class EstadoNormal:
 
         if "base" in nome_local.lower():
             with self.get_conn() as conn:
-                listar_bau_base(conn)
+                listar_bau_base(conn, self.save)
         else:
             print(f"\nVocê não está em uma base. Você está no(a) {nome_local}.\n") 
 
@@ -187,7 +198,21 @@ class EstadoNormal:
     def explorar(self):
         return explorar(self)
     
+    def tentar_fuga(self):
+        return random.random() < 0.5
+    
+    def iniciar_luta(self, inimigos):
+        from frontend.Luta import Luta
+        with self.get_conn() as conn:
+            luta = Luta(conn, self, inimigos)
+            return luta.luta_turno_prota()
 
+    def deletar_protagonista(self):
+        """Deleta a instância do protagonista quando ele morre"""
+        with self.get_conn() as conn:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM Inst_Prota WHERE Save = %s", (self.save,))
+            conn.commit()
 
     def end(self):
         pass

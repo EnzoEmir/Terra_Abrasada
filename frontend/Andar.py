@@ -1,5 +1,7 @@
 import os
 import inquirer
+from frontend.Encontro_Inimigo import processar_encontros, lidar_com_inimigos_ativos
+
 
 def andar(self):
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -51,3 +53,24 @@ def andar(self):
         self.set_localizacao(destino)
         self.localAtual = destino
         input("Pressione Enter para continuar.")
+
+
+     # Encontro com inimigos ao chegar no novo local
+    with self.get_conn() as conn:
+        resultado = lidar_com_inimigos_ativos(conn, self.localAtual, self)
+        if resultado == "derrota_protagonista":
+            return "derrota_protagonista"
+        elif resultado == "conseguiu_fugir":
+            return "continua"
+        elif resultado == "vitoria_protagonista":
+            return "continua"
+
+        encontrou = processar_encontros(conn, self.localAtual, self.localAtual, self.save)
+        if encontrou:
+            novo_resultado = lidar_com_inimigos_ativos(conn, self.localAtual, self)
+            if novo_resultado == "derrota_protagonista":
+                return "derrota_protagonista"
+            elif novo_resultado == "conseguiu_fugir":
+                return "continua"
+            elif novo_resultado == "vitoria_protagonista":
+                return "continua"

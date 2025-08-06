@@ -1,5 +1,5 @@
-def listar_bau_base(conn):
-    """Lista os itens do baú da base"""
+def listar_bau_base(conn, save):
+    # Lista os itens do baú da base do save específico
     with conn.cursor() as cur:
         cur.execute("""
             SELECT 
@@ -13,8 +13,9 @@ def listar_bau_base(conn):
             LEFT JOIN Utilizavel u ON u.ID_Uti = i.ID_Item
             LEFT JOIN Equipavel e ON e.ID_Equi = i.ID_Item
             LEFT JOIN Material m ON m.ID_Mat = i.ID_Item
+            WHERE ii.Save = %s
             ORDER BY bb.Pos_Bau;
-        """)
+        """, (save,))
         
         resultados = cur.fetchall()
         if resultados:
