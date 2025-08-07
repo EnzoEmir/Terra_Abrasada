@@ -10,7 +10,7 @@ Uma experiência narrativa e estratégica ambientada em um mundo devastado por u
 
 ## Sobre o Projeto
 
-Este jogo é uma evolução do projeto desenvolvido na disciplina **Sistemas de Banco de Dados 1** ([repositório original](https://github.com/SBD1/2025.1-grupo8-Terra_Morta)). Agora, com foco em jogabilidade, narrativa interativa e uma arquitetura de dados mais sólida.
+Este jogo é uma evolução do projeto desenvolvido na disciplina **Sistemas de Banco de Dados 1** ([repositório original](https://github.com/SBD1/2025.1-grupo8-Terra_Morta)). Agora, com foco em jogabilidade,uma arquitetura de dados mais sólida e principalmente para fixar conteúdos de SBD1.
 
 A proposta central é unir entretenimento e aplicação prática de conceitos de banco de dados relacionais. Todo o backend do jogo é orientado por SQL: desde controle de inventário e progresso do jogador até a interações com NPCs.
 
@@ -29,8 +29,7 @@ A proposta central é unir entretenimento e aplicação prática de conceitos de
 ## Conceitos SQL Aplicados
 
 - Consultas aninhadas e agregações
-- Views e Stored Procedures
-- Gatilhos (Triggers) para eventos dinâmicos
+- Stored Procedures
 - Normalização de tabelas
 - Integridade referencial com Foreign Keys
 - Controle de transações para garantir consistência dos dados
@@ -40,9 +39,17 @@ A proposta central é unir entretenimento e aplicação prática de conceitos de
 ## 🔥 Diferenciais desta Versão
 
 - Estrutura do projeto mais limpa
-- Narrativa ramificada com consequências persistentes
-- Sistema de gerenciamento da base
-- Melhorias do combate
+- Sistema de save
+- Baú da base
+
+---
+
+## O Que Falta ser Implementado ❗ 
+
+- Melhoria da base
+- Sistema de missões com recompensas
+- Sistema da loja
+- Balancear valores 
 
 ---
 
@@ -78,7 +85,7 @@ No PostgreSQL, execute os arquivos a seguir **nesta ordem**:
 
 ## 🚧 Status do Projeto
 
-Em desenvolvimento ativo. Esta versão visa alcançar um MVP jogável com um ciclo básico de sobrevivência, decisões morais e persistência de dados.
+Em desenvolvimento ativo. Esta versão visa alcançar um MVP jogável com um ciclo básico de sobrevivência e persistência de dados.
 
 ---
 

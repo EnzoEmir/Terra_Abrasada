@@ -138,10 +138,106 @@ class Luta:
             self.dados_inimigos.pop(index_inst)
         
     def usar_item(self):
-        # Por enquanto só retorna voltar, precisa implementar sistema de inventário
-        print("Sistema de inventário ainda não implementado.")
-        input("Pressione Enter para continuar.")
-        return "voltar"
+        """Permite usar itens utilizáveis do inventário durante o combate"""
+        self.estado.print_clr("=== USAR ITEM ===\n")
+        
+        with self.conn.cursor() as cur:
+            # Busca itens utilizáveis no inventário do save correto
+            cur.execute("""
+                SELECT inv.Pos_Inv, inv.Quantidade, ii.ID_Inst, u.Nome, u.Atributo, u.Valor
+                FROM Inventario inv
+                JOIN Inst_Item ii ON inv.ID_Inst_Item = ii.ID_Inst
+                JOIN Item i ON ii.ID_Item = i.ID_Item
+                JOIN Utilizavel u ON u.ID_Uti = i.ID_Item
+                WHERE ii.Save = %s AND inv.Quantidade > 0
+                ORDER BY inv.Pos_Inv
+            """, (self.estado.save,))
+            
+            itens_utilizaveis = cur.fetchall()
+            
+            if not itens_utilizaveis:
+                print("Você não possui itens utilizáveis no inventário.")
+                input("Pressione Enter para continuar.")
+                return "voltar"
+            
+            print("Itens utilizáveis disponíveis:\n")
+            escolhas = []
+            
+            for i, (pos_inv, quantidade, id_inst, nome, atributo, valor) in enumerate(itens_utilizaveis):
+                efeito = f" ({atributo}: {'+' if valor > 0 else ''}{valor})" if atributo else ""
+                linha = f"{i} - {nome.strip()}{efeito} x{quantidade}"
+                escolhas.append(linha)
+                print(f"{i} - {nome.strip()}{efeito} x{quantidade}")
+            
+            escolhas.append("Voltar")
+            print(f"{len(escolhas)-1} - Voltar")
+            
+            pergunta = [
+                inquirer.List(
+                    'item',
+                    message="\nQual item deseja usar?",
+                    choices=escolhas
+                )
+            ]
+            
+            resposta = inquirer.prompt(pergunta)
+            if not resposta or resposta['item'] == "Voltar":
+                return "voltar"
+            
+            # Pega o índice do item selecionado
+            index = int(resposta['item'].split(' - ')[0])
+            pos_inv, quantidade, id_inst, nome, atributo, valor = itens_utilizaveis[index]
+            
+            # Aplica o efeito do item
+            if atributo == 'HP_Atual':
+                hp_atual, hp_max = self.estado.get_hp()
+                novo_hp = min(hp_max, hp_atual + valor)
+                self.estado.set_hp(novo_hp)
+                print(f"\nVocê usou {nome.strip()} e recuperou {novo_hp - hp_atual} de vida!")
+                print(f"Vida atual: {novo_hp}/{hp_max}")
+                
+            elif atributo == 'Fome_Atual':
+                fome_atual, fome_max = self.estado.get_fome()
+                nova_fome = max(0, min(fome_max, fome_atual + valor))
+                self.estado.set_fome(nova_fome)
+                efeito_texto = "recuperou" if valor > 0 else "perdeu"
+                print(f"\nVocê usou {nome.strip()} e {efeito_texto} {abs(valor)} de fome!")
+                print(f"Fome atual: {nova_fome}/{fome_max}")
+                
+            elif atributo == 'Sede_Atual':
+                sede_atual, sede_max = self.estado.get_sede()
+                nova_sede = max(0, min(sede_max, sede_atual + valor))
+                self.estado.set_sede(nova_sede)
+                efeito_texto = "recuperou" if valor > 0 else "perdeu"
+                print(f"\nVocê usou {nome.strip()} e {efeito_texto} {abs(valor)} de sede!")
+                print(f"Sede atual: {nova_sede}/{sede_max}")
+                
+            elif atributo == 'Nivel_Rad_Atual':
+                rad_atual = self.estado.get_radiacao()
+                nova_rad = max(0, rad_atual + valor)
+                self.estado.set_radiacao(nova_rad)
+                efeito_texto = "aumentou" if valor > 0 else "diminuiu"
+                print(f"\nVocê usou {nome.strip()} e {efeito_texto} {abs(valor)} de radiação!")
+                print(f"Radiação atual: {nova_rad}/500")
+            
+            else:
+                print(f"\nVocê usou {nome.strip()}, mas não teve efeito visível.")
+            
+            # Remove uma unidade do item do inventário
+            if quantidade > 1:
+                cur.execute("""
+                    UPDATE Inventario 
+                    SET Quantidade = Quantidade - 1 
+                    WHERE Pos_Inv = %s
+                """, (pos_inv,))
+            else:
+                # Remove o item completamente se era o último
+                cur.execute("DELETE FROM Inventario WHERE Pos_Inv = %s", (pos_inv,))
+                cur.execute("DELETE FROM Inst_Item WHERE ID_Inst = %s", (id_inst,))
+            
+            self.conn.commit()
+            input("\nPressione Enter para continuar.")
+            return "item_usado"
         
     def fugir_da_luta(self):
         if self.estado.tentar_fuga():
@@ -165,12 +261,30 @@ class Luta:
             if row:
                 id_ser = row[0]
                 # Busca os itens que o inimigo pode dropar
-                cur.execute("SELECT ID_Item FROM NPC_Dropa WHERE ID_NPC = %s", (id_ser,))
+                cur.execute("SELECT ID_Item, Chance FROM NPC_Dropa WHERE ID_NPC = %s", (id_ser,))
                 drops = cur.fetchall()
-                for (id_item,) in drops:
-                    # Por enquanto só mostra o que droparia, sem sistema de inventário
-                    nome_item = self.get_item_name(id_item)
-                    print(f"O inimigo dropou: {nome_item}")
+                
+                itens_dropados = []
+                for id_item, chance in drops:
+                    # Verifica se o item será dropado baseado na chance
+                    if random.randint(1, 100) <= chance:
+                        # Cria uma instância do item no local atual COM O SAVE CORRETO
+                        cur.execute("""
+                            INSERT INTO Inst_Item (ID_Item, Save, Localizacao)
+                            VALUES (%s, %s, %s)
+                            RETURNING ID_Inst
+                        """, (id_item, self.estado.save, self.estado.localAtual))
+                        
+                        id_inst_item = cur.fetchone()[0]
+                        nome_item = self.get_item_name(id_item)
+                        itens_dropados.append(nome_item)
+                        print(f"O inimigo dropou: {nome_item} ")
+                
+                if not itens_dropados:
+                    print("O inimigo não dropou nada.")
+                else:
+                    input("Pressione Enter para continuar...")
+                    
             self.conn.commit()
 
             

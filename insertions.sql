@@ -192,7 +192,7 @@ SELECT criar_acontecimento_mundo( 10::SMALLINT, 'Banquete inesperado! Recuperou 
 
 
 -- =======================================
--- 9. INIMIGOS NÃO INTELIGENTES
+-- 7. INIMIGOS NÃO INTELIGENTES
 -- =======================================
 INSERT INTO Nao_Inteligente (ID_N_Int, Nome, HP_Base, Forca_Base, Defesa_Base, Nivel_Rad) VALUES
 
@@ -236,7 +236,7 @@ INSERT INTO Nao_Inteligente (ID_N_Int, Nome, HP_Base, Forca_Base, Defesa_Base, N
 
 
 -- =======================================
--- 10. INIMIGOS INTELIGENTES
+-- 8. INIMIGOS INTELIGENTES
 -- =======================================
 
 INSERT INTO Inteligente (ID_Int, Nome, HP_Base, Forca_Base, Defesa_Base, Nivel_Rad, Alinhamento) VALUES
@@ -267,7 +267,7 @@ INSERT INTO Inteligente (ID_Int, Nome, HP_Base, Forca_Base, Defesa_Base, Nivel_R
 
 
 -- =======================================
--- 11. ENCONTROS COM INIMIGOS 
+-- 9. ENCONTROS COM INIMIGOS 
 -- =======================================
 
 SELECT criar_encontro(103, 1, 2, NULL::INT, '1', '50');
@@ -426,3 +426,211 @@ SELECT criar_encontro(404, 1, 21, NULL::INT, '4', '10'); -- 1 Profeta Isótopo
 
 -- PI 22: Coração de Sanguinem (boss)
 SELECT criar_encontro(999, 1, 22, 1, '5', '100'); -- 1 Avatar do Núcleo (boss)
+
+-- =======================================
+-- 10. ITENS
+-- ======================================= 
+
+INSERT INTO Item (ID_Item, Tipo) VALUES
+(1001, 'Utilizável'),  -- Carne Mutante Crua
+(1002, 'Utilizável'),  -- Água Contaminada
+(1003, 'Utilizável'),  -- Estimulante de Sobrevivência
+(1004, 'Utilizável'),  -- Soro Anti-Rad
+(1005, 'Utilizável'),  -- Comida Enlatada Antiga
+(1006, 'Utilizável'),  -- Garrafa de Água Limpa
+
+(2001, 'Equipável'),  -- Capacete Enferrujado
+(2002, 'Equipável'),  -- Colete de Couro Cru
+(2003, 'Equipável'),  -- Luvas de Borracha
+(2004, 'Equipável'),  -- Bota Improvisada
+(2005, 'Equipável'),  -- Pé-de-Cabra Enferrujado
+(2006, 'Equipável'),  -- Armadura de Sucata
+(2007, 'Equipável'),  -- Espinhos de Lagarto
+(2008, 'Equipável'),  -- Capacete Tático Antigo
+(2009, 'Equipável'),  -- Mão Robótica Quebrada
+(2010, 'Equipável'),  -- Espingarda Improvisada
+
+(3001, 'Material'),  -- Circuito Danificado
+(3002, 'Material'),  -- Pedaço de Metal
+(3003, 'Material'),  -- Glândula Mutante
+(3004, 'Material'),  -- Fragmento de Osso
+(3005, 'Material'),  -- Óleo Radioativo
+
+(4001, 'Equipável'), -- Lâmina do Profeta Isótopo
+(4002, 'Equipável'), -- Armadura de Quitina
+(4003, 'Equipável'); -- Crânio da Hidra de Carne
+
+
+INSERT INTO Utilizavel (ID_Uti, Nome, Atributo, Valor) VALUES
+(1001, 'Carne Mutante Crua', 'Fome_Atual', -10), -- dá fome e pode causar efeito ruim
+(1002, 'Água Contaminada', 'Sede_Atual', -5),
+(1003, 'Estimulante de Sobrevivência', 'HP_Atual', 30),
+(1004, 'Soro Anti-Rad', 'Nivel_Rad_Atual', -15),
+(1005, 'Comida Enlatada Antiga', 'Fome_Atual', 25),
+(1006, 'Garrafa de Água Limpa', 'Sede_Atual', 30);
+
+INSERT INTO Equipavel (ID_Equi, Nome, Atributo, Valor, Parte_Corpo) VALUES
+(2001, 'Capacete Enferrujado', 'Defesa_Atual', 2, 'Cabeça'),
+(2002, 'Colete de Couro Cru', 'Defesa_Atual', 4, 'Tronco'),
+(2003, 'Luvas de Borracha', 'Defesa_Atual', 1, 'Braço'),
+(2004, 'Bota Improvisada', 'Defesa_Atual', 2, 'Perna'),
+(2005, 'Pé-de-Cabra Enferrujado', 'Forca_Atual', 5, 'Arma'),
+(2006, 'Armadura de Sucata', 'Defesa_Atual', 6, 'Tronco'),
+(2007, 'Espinhos de Lagarto', 'Forca_Atual', 4, 'Braço'),
+(2008, 'Capacete Tático Antigo', 'Defesa_Atual', 3, 'Cabeça'),
+(2009, 'Mão Robótica Quebrada', 'Forca_Atual', 6, 'Braço'),
+(2010, 'Espingarda Improvisada', 'Forca_Atual', 10, 'Arma'),
+(2011, 'Lança do Profeta Isótopo', 'Forca_Atual', 10, 'Arma'),
+(4001, 'Lâmina do Profeta Isótopo', 'Forca_Atual', 15, 'Arma'),
+(4002, 'Armadura de Quitina', 'Defesa_Atual', 12, 'Tronco'),
+(4003, 'Crânio da Hidra de Carne', 'Defesa_Atual', 14, 'Cabeça');
+
+INSERT INTO Material (ID_Mat, Nome) VALUES
+(3001, 'Circuito Danificado'),
+(3002, 'Pedaço de Metal'),
+(3003, 'Glândula Mutante'),
+(3004, 'Fragmento de Osso'),
+(3005, 'Óleo Radioativo');
+
+
+-- =======================================
+-- 8. DROPS
+-- =======================================
+
+-- Barata Mutante
+INSERT INTO NPC_Dropa VALUES
+(101, 1001, 40),  -- Carne Mutante Crua
+(101, 3004, 30);  -- Fragmento de Osso
+
+-- Cachorro Faminto
+INSERT INTO NPC_Dropa VALUES
+(102, 1001, 50),  -- Carne Mutante Crua
+(102, 3002, 30);  -- Pedaço de Metal
+
+-- Rato Carniceiro
+INSERT INTO NPC_Dropa VALUES
+(103, 1001, 35),
+(103, 3004, 30);
+
+-- Corvo Mutante
+INSERT INTO NPC_Dropa VALUES
+(104, 1001, 30),
+(104, 3005, 25);  -- Óleo Radioativo
+
+-- Pombo Radioativo
+INSERT INTO NPC_Dropa VALUES
+(105, 1002, 40),  -- Água Contaminada
+(105, 3005, 20);
+
+-- Cururu Mutante
+INSERT INTO NPC_Dropa VALUES
+(106, 1001, 35),
+(106, 3003, 25);  -- Glândula Mutante
+
+-- Cachorro Mutante
+INSERT INTO NPC_Dropa VALUES
+(201, 1005, 50),  -- Comida Enlatada Antiga
+(201, 3003, 40);
+
+-- Robô de Segurança
+INSERT INTO NPC_Dropa VALUES
+(202, 3001, 60),  -- Circuito Danificado
+(202, 2009, 50);  -- Mão Robótica Quebrada
+
+-- Jacaré Mutante
+INSERT INTO NPC_Dropa VALUES
+(203, 1001, 50),
+(203, 2007, 45);  -- Espinhos de Lagarto
+
+-- Brutamontes Mutante
+INSERT INTO NPC_Dropa VALUES
+(301, 2006, 60),  -- Armadura de Sucata
+(301, 1003, 40);  -- Estimulante
+
+-- Ecohorror
+INSERT INTO NPC_Dropa VALUES
+(302, 1004, 50),  -- Soro Anti-Rad
+(302, 3005, 60);  -- Óleo Radioativo
+
+-- Urubu de Aço
+INSERT INTO NPC_Dropa VALUES
+(303, 3001, 55),
+(303, 2008, 45);  -- Capacete Tático Antigo
+
+-- Lagarto Mutante
+INSERT INTO NPC_Dropa VALUES
+(501, 2007, 40),  -- Espinhos de Lagarto
+(501, 3003, 35);
+
+-- Lagarto Putrefato
+INSERT INTO NPC_Dropa VALUES
+(502, 2002, 50),  -- Colete de Couro Cru
+(502, 1001, 40);
+
+-- Lagarto Espinhoso
+INSERT INTO NPC_Dropa VALUES
+(503, 2003, 50),  -- Luvas de Borracha
+(503, 3004, 40);
+
+-- Formiga Operária
+INSERT INTO NPC_Dropa VALUES
+(601, 3003, 30),
+(601, 1001, 30);
+
+-- Formiga Soldado
+INSERT INTO NPC_Dropa VALUES
+(602, 2003, 40),  -- Luvas
+(602, 3005, 40);
+
+-- Formiga Anciã
+INSERT INTO NPC_Dropa VALUES
+(603, 2002, 50),  -- Colete
+(603, 3003, 50);
+
+-- Catador
+INSERT INTO NPC_Dropa VALUES
+(107, 1002, 30),
+(107, 3002, 40);
+
+-- Fanático Desconhecido
+INSERT INTO NPC_Dropa VALUES
+(108, 1004, 30),
+(108, 3005, 30);
+
+-- Sobrevivente Hostil
+INSERT INTO NPC_Dropa VALUES
+(204, 1005, 50),
+(204, 2005, 40);  -- Pé-de-Cabra
+
+-- Canibal
+INSERT INTO NPC_Dropa VALUES
+(205, 1001, 60),
+(205, 2004, 40);  -- Bota Improvisada
+
+-- Pessoa Mutante
+INSERT INTO NPC_Dropa VALUES
+(304, 1003, 50),
+(304, 2006, 50);
+
+-- Ex-Militar Enlouquecido
+INSERT INTO NPC_Dropa VALUES
+(305, 2008, 50),
+(305, 2010, 50);  -- Espingarda Improvisada
+
+-- Nigrum Sanguinem (hierarquia)
+INSERT INTO NPC_Dropa VALUES
+(401, 1002, 30),
+(402, 1004, 40),
+(403, 2001, 50),
+(404, 2011, 70);
+
+
+-- Bosses
+INSERT INTO NPC_Dropa VALUES
+(997, 4002, 100),  -- Omni-Mente → Peitoral
+(998, 4003, 100),  -- Hidra de Carne → Capacete
+(999, 4001, 100);  -- Hidra de Carne → Capacete
+
+
+
+

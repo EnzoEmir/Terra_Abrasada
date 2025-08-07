@@ -124,6 +124,8 @@
 |----------|--------------|----|----|--------|-----------------------------------------------------------------|
 | ID_NPC   | SMALLINT          | ✔️ | Ser(ID_Ser) | ❌     | FK para o NPC que pode dropar o item.                          |
 | ID_Item  | SMALLINT          | ✔️ | Inst_Item(ID_Inst) | ❌     | FK para o item que pode ser dropado por esse NPC.              |
+| Chance  | SMALLINT          |  |  | ❌     | Chance de dropar um item.              |
+
 
 ---
 

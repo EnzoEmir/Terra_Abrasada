@@ -40,11 +40,26 @@ class Personagem:
             
             print(f"\n=== STATUS DE {nome.upper()} ===\n")
             
+            # Calcula bônus dos equipamentos
+            bonus_forca = self.estado.calcular_bonus_equipamento('Forca_Atual')
+            bonus_defesa = self.estado.calcular_bonus_equipamento('Defesa_Atual')
+            
             # Status Básicos
             print("ATRIBUTOS BÁSICOS:")
             print(f"   HP: {hp_atual}/{hp_base}")
-            print(f"   Força: {forca_atual} (Base: {forca_base})")
-            print(f"   Defesa: {defesa_atual} (Base: {defesa_base})")
+            
+            # Mostra força com bônus se houver
+            if bonus_forca > 0:
+                print(f"   Força: {forca_atual + bonus_forca} ({forca_atual} + {bonus_forca}) (Base: {forca_base})")
+            else:
+                print(f"   Força: {forca_atual} (Base: {forca_base})")
+            
+            # Mostra defesa com bônus se houver  
+            if bonus_defesa > 0:
+                print(f"   Defesa: {defesa_atual + bonus_defesa} ({defesa_atual} + {bonus_defesa}) (Base: {defesa_base})")
+            else:
+                print(f"   Defesa: {defesa_atual} (Base: {defesa_base})")
+                
             print(f"   Radiação: {nivel_rad_atual}")
             print(f"   Fome: {fome_atual}/{fome_base}")
             print(f"   Sede: {sede_atual}/{sede_base}")
@@ -80,9 +95,11 @@ class Personagem:
             
             for parte, id_eq in equipamentos.items():
                 if id_eq:
-                    # Busca o nome do equipamento através de Inst_Item -> Item -> Equipavel
+                    # Busca o nome e bônus do equipamento
                     cur.execute('''
-                        SELECT COALESCE(e.Nome, u.Nome, m.Nome) as Nome
+                        SELECT COALESCE(e.Nome, u.Nome, m.Nome) as Nome,
+                               COALESCE(e.Atributo, '') as Atributo,
+                               COALESCE(e.Valor, 0) as Valor
                         FROM Inst_Item ii
                         JOIN Item i ON ii.ID_Item = i.ID_Item
                         LEFT JOIN Equipavel e ON e.ID_Equi = i.ID_Item
@@ -91,12 +108,68 @@ class Personagem:
                         WHERE ii.ID_Inst = %s
                     ''', (id_eq,))
                     eq_row = cur.fetchone()
-                    nome_eq = eq_row[0].strip() if eq_row else 'Desconhecido'
-                    print(f"   {parte}: {nome_eq}")
+                    if eq_row:
+                        nome_eq, atributo, valor = eq_row
+                        bonus = f" (+{valor} {atributo})" if atributo and valor > 0 else ""
+                        print(f"   {parte}: {nome_eq.strip()}{bonus}")
+                    else:
+                        print(f"   {parte}: Desconhecido")
                 else:
                     print(f"   {parte}: Nenhum")
+            
+            # Calcula e mostra bônus total dos equipamentos
+            print(f"\nBÔNUS TOTAL DOS EQUIPAMENTOS:")
+            self.calcular_e_mostrar_bonus_total(cur)
         
         input('\nPressione Enter para continuar.')
+    
+    def calcular_e_mostrar_bonus_total(self, cur):
+        """Calcula e mostra o bônus total dos equipamentos"""
+        # Busca todos os equipamentos atuais
+        cur.execute("""
+            SELECT ip.Eq_Cab, ip.Eq_Tronco, ip.Eq_Braco, ip.Eq_Perna, ip.Arma_Atual
+            FROM Inst_Prota ip
+            WHERE ip.Save = %s
+        """, (self.estado.save,))
+        
+        equipamentos = cur.fetchone()
+        if not equipamentos:
+            print("   Nenhum equipamento encontrado")
+            return
+        
+        bonus_forca = 0
+        bonus_defesa = 0
+        bonus_hp = 0
+        
+        # Para cada equipamento, soma os bônus
+        for eq_id in equipamentos:
+            if eq_id:
+                cur.execute("""
+                    SELECT e.Atributo, e.Valor
+                    FROM Inst_Item ii
+                    JOIN Equipavel e ON e.ID_Equi = ii.ID_Item
+                    WHERE ii.ID_Inst = %s
+                """, (eq_id,))
+                eq_data = cur.fetchone()
+                if eq_data:
+                    atributo, valor = eq_data
+                    if atributo == 'Forca_Atual':
+                        bonus_forca += valor
+                    elif atributo == 'Defesa_Atual':
+                        bonus_defesa += valor
+                    elif atributo == 'HP_Atual':
+                        bonus_hp += valor
+        
+        # Mostra os bônus totais
+        if bonus_forca > 0:
+            print(f"   Força: +{bonus_forca}")
+        if bonus_defesa > 0:
+            print(f"   Defesa: +{bonus_defesa}")
+        if bonus_hp > 0:
+            print(f"   HP: +{bonus_hp}")
+            
+        if bonus_forca == 0 and bonus_defesa == 0 and bonus_hp == 0:
+            print("   Nenhum bônus ativo")
 
     def visualizar_mutacoes_atuais(self):
         # Método antigo mantido para compatibilidade, mas chama o novo

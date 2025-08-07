@@ -11,14 +11,11 @@ RETURNS SMALLINT AS $criar_acontecimento$
 DECLARE
     v_id_evento SMALLINT;
 BEGIN
-    -- Cria o evento do tipo ACONTECIMENTO MUNDO
     INSERT INTO Evento (Max_Ocorrencia, Prioridade, Probabilidade, Tipo)
     VALUES (p_max_ocorrencia, p_prioridade, p_probabilidade, 'ACONTECIMENTO MUNDO')
     RETURNING ID_Evento INTO v_id_evento;
-    -- Cria o acontecimento_mundo vinculado ao evento
     INSERT INTO Acontecimento (ID_Evento, Valor, Texto)
     VALUES (v_id_evento, p_valor, p_texto);
-    -- Relaciona o evento ao ponto de interesse
     INSERT INTO Ocorre (ID_Evento, ID_PI)
     VALUES (v_id_evento, p_local);
     RETURN v_id_evento;
@@ -38,14 +35,11 @@ RETURNS INT AS $criar_encontro$
 DECLARE
     v_id_evento INT;
 BEGIN
-    -- Cria o evento do tipo ENCONTRO
     INSERT INTO Evento (Max_Ocorrencia, Prioridade, Probabilidade, Tipo)
     VALUES (p_max_ocorrencia, p_prioridade, p_probabilidade, 'ENCONTRO')
     RETURNING ID_Evento INTO v_id_evento;
-    -- Cria o encontro vinculado ao evento
     INSERT INTO Encontro (ID_Evento, ID_Inimigo, Quantidade)
     VALUES (v_id_evento, p_id_inimigo, p_quantidade);
-    -- Relaciona o evento ao ponto de interesse
     INSERT INTO Ocorre (ID_Evento, ID_PI)
     VALUES (v_id_evento, p_local);
     RETURN v_id_evento;

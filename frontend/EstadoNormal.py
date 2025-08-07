@@ -6,6 +6,8 @@ from frontend.Andar import andar
 from frontend.Explorar import explorar
 from frontend.Bau import listar_bau_base
 from frontend.Personagem import Personagem
+from frontend.Inventario import listar_itens_no_local, visualizar_inventario
+from frontend.Equipamentos import gerenciar_equipamentos
 
 
 
@@ -107,16 +109,60 @@ class EstadoNormal:
     def get_str(self):
         with self.get_conn() as conn:
             cur = conn.cursor()
+            # Busca força base
             cur.execute("SELECT Forca_Atual FROM Inst_Prota WHERE Save = %s", (self.save,))
-            row = cur.fetchone()
-            return row[0] if row else 0
+            forca_base = cur.fetchone()[0] if cur.rowcount else 0
+            
+            # Soma bônus dos equipamentos
+            bonus_forca = self.calcular_bonus_equipamento('Forca_Atual')
+            
+            return forca_base + bonus_forca
 
     def get_def(self):
         with self.get_conn() as conn:
             cur = conn.cursor()
+            # Busca defesa base
             cur.execute("SELECT Defesa_Atual FROM Inst_Prota WHERE Save = %s", (self.save,))
-            row = cur.fetchone()
-            return row[0] if row else 0
+            defesa_base = cur.fetchone()[0] if cur.rowcount else 0
+            
+            # Soma bônus dos equipamentos
+            bonus_defesa = self.calcular_bonus_equipamento('Defesa_Atual')
+            
+            return defesa_base + bonus_defesa
+    
+    def calcular_bonus_equipamento(self, atributo):
+        """Calcula o bônus total de um atributo baseado nos equipamentos"""
+        with self.get_conn() as conn:
+            cur = conn.cursor()
+            
+            # Busca todos os equipamentos atuais
+            cur.execute("""
+                SELECT ip.Eq_Cab, ip.Eq_Tronco, ip.Eq_Braco, ip.Eq_Perna, ip.Arma_Atual
+                FROM Inst_Prota ip
+                WHERE ip.Save = %s
+            """, (self.save,))
+            
+            equipamentos = cur.fetchone()
+            if not equipamentos:
+                return 0
+            
+            bonus_total = 0
+            
+            # Para cada equipamento, verifica se dá bônus no atributo desejado
+            for eq_id in equipamentos:
+                if eq_id:
+                    cur.execute("""
+                        SELECT e.Valor
+                        FROM Inst_Item ii
+                        JOIN Equipavel e ON e.ID_Equi = ii.ID_Item
+                        WHERE ii.ID_Inst = %s AND e.Atributo = %s
+                    """, (eq_id, atributo))
+                    
+                    resultado = cur.fetchone()
+                    if resultado:
+                        bonus_total += resultado[0]
+            
+            return bonus_total
 
     def get_nome(self):
         with self.get_conn() as conn:
@@ -145,6 +191,9 @@ class EstadoNormal:
                 'Andar para outro local': self.andar,
                 'Explorar o local': self.explorar,
                 'Visualizar status do personagem': self.visualizar_status_personagem,
+                'Coletar itens': self.coletar_itens,
+                'Ver inventário': self.ver_inventario,
+                'Gerenciar equipamentos': self.gerenciar_equipamentos,
                 'Retornar ao menu principal': self.end
             }
             
@@ -221,6 +270,18 @@ class EstadoNormal:
             conn.commit()
     def visualizar_status_personagem(self):
         return Personagem(self).visualizar_status_personagem()
+    
+    def coletar_itens(self):
+        with self.get_conn() as conn:
+            listar_itens_no_local(conn, self.save, self.localAtual)
+    
+    def ver_inventario(self):
+        with self.get_conn() as conn:
+            visualizar_inventario(conn, self.save)
+    
+    def gerenciar_equipamentos(self):
+        with self.get_conn() as conn:
+            gerenciar_equipamentos(conn, self.save)
 
     def end(self):
         pass
