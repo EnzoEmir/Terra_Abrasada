@@ -5,6 +5,7 @@ import psycopg
 from frontend.Andar import andar
 from frontend.Explorar import explorar
 from frontend.Bau import listar_bau_base
+from frontend.Personagem import Personagem
 
 
 
@@ -15,12 +16,6 @@ class EstadoNormal:
         self.save = save
         self.db_params = db_params
         self.localAtual = self.get_localizacao_atual()
-        self.opcoes = {
-            'Andar para outro local': self.andar,
-            'Abrir baú': self.base,
-            'Explorar o local': self.explorar,
-            'Retornar ao menu principal': self.end
-        }
     
     def get_conn(self):
         return psycopg.connect(**self.db_params)
@@ -145,7 +140,19 @@ class EstadoNormal:
             print(f'Sede: {sede_atual}/{sede_max}')
             print(f'Nível de Radiação: {nivel_rad_atual}/500\n')
 
-            opcoes_menu = list(self.opcoes.keys())
+            # Criar opções dinamicamente baseado no local
+            opcoes = {
+                'Andar para outro local': self.andar,
+                'Explorar o local': self.explorar,
+                'Visualizar status do personagem': self.visualizar_status_personagem,
+                'Retornar ao menu principal': self.end
+            }
+            
+            # Adicionar opção de baú apenas se estiver na base
+            if "base" in nome.lower():
+                opcoes['Abrir baú'] = self.base
+
+            opcoes_menu = list(opcoes.keys())
             
 
             perguntas = [
@@ -165,7 +172,7 @@ class EstadoNormal:
                 print("\nRetornando ao menu principal...\n")
                 break
             else:
-                resultado_acao = self.opcoes[acao]()
+                resultado_acao = opcoes[acao]()
                 
                 # Verifica se o protagonista morreu
                 if resultado_acao == "derrota_protagonista":
@@ -175,8 +182,7 @@ class EstadoNormal:
                     break
     
     def andar(self):
-        lol = andar(self)
-        return lol
+        return andar(self)
 
     def base(self):
         nome_local = self.G.nodes[self.localAtual]["nome"]
@@ -213,6 +219,8 @@ class EstadoNormal:
             cur = conn.cursor()
             cur.execute("DELETE FROM Inst_Prota WHERE Save = %s", (self.save,))
             conn.commit()
+    def visualizar_status_personagem(self):
+        return Personagem(self).visualizar_status_personagem()
 
     def end(self):
         pass
